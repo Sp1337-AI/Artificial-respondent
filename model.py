@@ -6,8 +6,10 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 class LanguageModel(object):
 
     def __init__(self):
-        tokenizer = AutoTokenizer.from_pretrained("sberbank-ai/sbert_large_mt_nlu_ru")
-        enc = AutoModel.from_pretrained("sberbank-ai/sbert_large_mt_nlu_ru")
+        #tokenizer = AutoTokenizer.from_pretrained("sberbank-ai/sbert_large_mt_nlu_ru")
+        #enc = AutoModel.from_pretrained("sberbank-ai/sbert_large_mt_nlu_ru")
+        tokenizer = AutoTokenizer.from_pretrained("sentence-transformers/paraphrase-multilingual-mpnet-base-v2")
+        enc = AutoModel.from_pretrained("sentence-transformers/paraphrase-multilingual-mpnet-base-v2")
         self.model = {
             'tokenizer': tokenizer,
             'encoder': enc,

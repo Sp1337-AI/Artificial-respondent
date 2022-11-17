@@ -8,10 +8,11 @@ import random
 from model import LanguageModel
 from answer_fill import MethodicFiller
 
-url = "https://docs.google.com/forms/d/e/1FAIpQLSdSs4dNhMFKDAp3xEu-VgS8yJ9UbSGf_K7F1Bk8VA3l61xTlw/viewform"
+url = "https://docs.google.com/forms/d/e/1FAIpQLSfQ_-joZ_Cj2_Igm0hgYaeKleHzNH89ff5ofH0Xoq6UoTzOyQ/viewform"
 
-questionnaire = gFormParser.parse_scale_form(url)
+questionnaire = gFormParser.parse_multipaged_form(url)
 print(questionnaire)
+print("\nsecond", questionnaire.questionnaries[1])
 
 
 def generate_name(gender):
@@ -78,15 +79,34 @@ class GeneratorTolpi(object):
             respondent.fill_survey()
             gFormParser.fill_scale_form(url, respondent) #вот здесь она должна принимать респондента.
 
-#model = LanguageModel()
-#for i in range(1):
-#    print('respondent number:', i + 1)
-#    questionnaire.name = generate_name(np.random.choice(['female', 'male'], p=[0.5, 0.5]))
-#    print('questionaire.name =', questionnaire.name)
-#    questionnaire.questions = [cut_number_of_question_order(question) for question in questionnaire.questions]
-#    filler = MethodicFiller(questionnaire.answer_options, questionnaire.questions, model)
-#    filler.put_answers(threshold=0.6)
-#    questionnaire.answers = filler.ready_answers
-#    print("answers =", questionnaire.answers)
-#    print()
-    # gFormParser.fill_scale_form(url, questionnaire)
+'''
+
+questions = [
+    'Когда я над чем-нибудь работаю, я не могу расслабиться, пока не доведу это до совершенства',
+
+    'Я никогда не задаюсь целью добиться совершенства в том, над чем работаю',
+    'Мне не особенно нужно быть совершенным',
+    'Мне не обязательно быть лучшим во всем, чем я занимаюсь',
+    'Я не ставлю перед собой больших, труднодостижимых целей',
+
+    'Одна из моих целей - быть совершенным во всем, что я делаю',
+    'Я стремлюсь быть лучшим во всем, что я делаю',
+    'Мне крайне неприятно обнаруживать ошибки в своей работе',
+    'Я всегда должен работать в полную силу',
+
+    'Я способен с лёгкостью описать свои чувства',
+    'Легко могу развеселить самую скучную компанию',
+    'Желание побыть одному зависит у меня от обстоятельств и настроения',
+    'Мне нравятся неожиданности',
+]
+
+from sklearn.metrics.pairwise import cosine_similarity
+
+model = LanguageModel()
+
+encoded_questions = model(questions)
+similarities = cosine_similarity(encoded_questions.cpu(), encoded_questions.cpu())
+for i in range(len(similarities)):
+    print(similarities[i])
+
+'''

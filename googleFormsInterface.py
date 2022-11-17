@@ -3,30 +3,65 @@ from gforms.elements import Short, Value, Radio, Paragraph, Scale
 
 import questionnaire as q
 
-
-def parse_scale_form(url) -> q.QuestionnaireOptionsInterval:
+def parse_multipaged_form(url) -> q.QuestionnaireHolder:
     form = Form()
     form.load(url)
+    multipaged_questionnaire = q.QuestionnaireHolder()
+    #for page in form.pages:
+        #parsed_methodic = parse_scale_form(page)
+        #multipaged_questionnaire.add_methodic(parsed_methodic)
+    print("len of " + str(len(form.pages)))
+    for i in range(len(form.pages)):
+        if i == 0:
+            parsed_methodic = parse_general_questions_form(form.pages[i])
+            multipaged_questionnaire.add_methodic(parsed_methodic)
+            print("questions after len 1: " + str(len(parsed_methodic.questions)))
+        if i == 1:
+            parsed_methodic = parse_scale_form(form.pages[i])
+            print("questions after len: " + str(len(parsed_methodic.questions)))
+            multipaged_questionnaire.add_methodic(parsed_methodic)
+    return multipaged_questionnaire
+
+def parse_scale_form(page) -> q.QuestionnaireOptionsInterval:
     questionnaire = None
-    for page in form.pages:
-        for element in page.elements:
-            if isinstance(element, Scale):
-                questionnaire = q.QuestionnaireOptionsInterval(low=element.options[0].value,
-                                                               high=element.options[-1].value)
-                for option in element.options:
-                    questionnaire.add_answer_option(option.value)
-        for element in page.elements:
-            if isinstance(element, Scale):
-                if element.description is not None:
-                    questionnaire.add_main_question(element.name + ";" + element.description)
-                else:
-                    questionnaire.add_main_question(element.name + ";")
+    for element in page.elements:
+        if isinstance(element, Scale):
+            questionnaire = q.QuestionnaireOptionsInterval(low=element.options[0].value,
+                                                            high=element.options[-1].value)
+            for option in element.options:
+                questionnaire.add_answer_option(option.value)
+    for element in page.elements:
+        if isinstance(element, Scale):
+            if element.description is not None:
+                questionnaire.add_main_question(element.name + ";" + element.description)
             else:
-                if element.description is not None:
-                    questionnaire.add_supportive_question(element.name + ";" + element.description)
-                else:
-                    questionnaire.add_supportive_question(element.name + ";")
+                questionnaire.add_main_question(element.name + ";")
+        else:
+            if element.description is not None:
+                questionnaire.add_supportive_question(element.name + ";" + element.description)
+            else:
+                questionnaire.add_supportive_question(element.name + ";")
+    print("questions before len: " + str(len(questionnaire.questions)))
     return questionnaire
+
+def parse_general_questions_form(page) -> q.QuestionnaireGeneralQuestions:
+    questionnaire = q.QuestionnaireGeneralQuestions()
+    for element in page.elements:
+        if element.description is not None:
+            questionnaire.add_main_question(element.name + ";" + element.description)
+        else:
+            questionnaire.add_main_question(element.name + ";")
+            answer_options = []
+        if hasattr(element, 'options'):
+            for option in element.options:
+                if (option.value != None):
+                    answer_options.append(option.value)
+            questionnaire.add_answer(answer_options)
+        else:
+            questionnaire.add_answer([""]) #if we have not answer options it returns empty string
+    return questionnaire
+
+        
 
 
 def fill_scale_form(url, questionnaire: q.QuestionnaireOptionsInterval):
