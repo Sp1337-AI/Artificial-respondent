@@ -10,15 +10,12 @@ def parse_multipaged_form(url) -> q.QuestionnaireHolder:
     #for page in form.pages:
         #parsed_methodic = parse_scale_form(page)
         #multipaged_questionnaire.add_methodic(parsed_methodic)
-    print("len of " + str(len(form.pages)))
     for i in range(len(form.pages)):
         if i == 0:
             parsed_methodic = parse_general_questions_form(form.pages[i])
             multipaged_questionnaire.add_methodic(parsed_methodic)
-            print("questions after len 1: " + str(len(parsed_methodic.questions)))
         if i == 1:
             parsed_methodic = parse_scale_form(form.pages[i])
-            print("questions after len: " + str(len(parsed_methodic.questions)))
             multipaged_questionnaire.add_methodic(parsed_methodic)
     return multipaged_questionnaire
 
@@ -41,7 +38,6 @@ def parse_scale_form(page) -> q.QuestionnaireOptionsInterval:
                 questionnaire.add_supportive_question(element.name + ";" + element.description)
             else:
                 questionnaire.add_supportive_question(element.name + ";")
-    print("questions before len: " + str(len(questionnaire.questions)))
     return questionnaire
 
 def parse_general_questions_form(page) -> q.QuestionnaireGeneralQuestions:

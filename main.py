@@ -12,7 +12,6 @@ url = "https://docs.google.com/forms/d/e/1FAIpQLSfQ_-joZ_Cj2_Igm0hgYaeKleHzNH89f
 
 questionnaire = gFormParser.parse_multipaged_form(url)
 print(questionnaire)
-print("\nsecond", questionnaire.questionnaries[1])
 
 
 def generate_name(gender):
