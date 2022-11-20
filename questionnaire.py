@@ -1,3 +1,25 @@
+class Question(object):
+    """One block containing a question and answer options."""
+
+    def __init__(self, question_string="", answer_options=[], description_string="", is_required=True):
+        self.question_string = question_string
+        self.answer_options = answer_options
+        self.description_string = description_string
+        self.is_required = is_required
+
+    def __str__(self):
+        s = ""
+        s += "===\n" + self.question_string
+        if self.is_required:
+            s += " *"
+        s += self.description_string + '\n'
+        s += "---" + '\n'
+        for option in self.answer_options:
+            s += option + '\n'
+        s += '\n'
+        return s
+
+
 class QuestionnaireHolder(object):
     """One instance of the questionnaire. 
     It can consist of several pages. Each page is represented by a questionnaire - methodology."""
@@ -6,23 +28,19 @@ class QuestionnaireHolder(object):
         self.name = ""
         self.questionnaires = []
 
-
-    def add_methodic(self, questionnaire):
+    def add_methodology(self, questionnaire):
         self.questionnaires.append(questionnaire)
 
     def __str__(self):
         s = ""
         for questionnaire in self.questionnaires:
+            s += "Questionnaire:\n"
             s += str(questionnaire)
         return s
 
 
 class QuestionnaireBase(object):
     """Questionnaire with all questions and types of answers"""
-
-    # questions = []
-    # other_questions = []
-    # answers = []
 
     def __init__(self):
         """Constructor"""
@@ -39,57 +57,8 @@ class QuestionnaireBase(object):
     def add_answer(self, answer):
         self.answers.append(answer)
 
-
-class QuestionnaireOptionsInterval(QuestionnaireBase):
-    """Questionnaire with option """
-
-    def __init__(self, low, high):
-        """Constructor"""
-        super().__init__()
-        self.answer_options = []
-        self.low = low
-        self.high = high
-
-    def add_answer_option(self, option_name):
-        self.answer_options.append(option_name)
-
-    def set_low(self, low):
-        self.low = low
-
-    def set_high(self, high):
-        self.high = high
-
     def __str__(self):
         s = ""
         for question in self.questions:
-            s += question + "\n"
-        s += "===\n"
-        for question in self.other_questions:
-            s += question + "\n"
-        s += "Answer options: \n"
-        for answer_option in self.answer_options:
-            s += answer_option + ", "
-        return s
-
-
-class QuestionnaireGeneralQuestions(QuestionnaireBase):
-    """Questionnaire for general questions such as name, sex, age, etc.
-    Now holding all questions
-     """
-
-    def __init__(self):
-        """Constructor"""
-        super().__init__()
-        self.answer_options = []
-
-    def __str__(self):
-        s = ""
-        for question in self.questions:
-            s += question + "\n"
-        s += "===\n"
-        s += "Answers: \n"
-        for answer in self.answers:
-            for answer_option in answer:
-                s += answer_option + ", "
-            s += "\n"
+            s += str(question)
         return s

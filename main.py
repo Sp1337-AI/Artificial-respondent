@@ -2,9 +2,9 @@ import googleFormsInterface as gFormParser
 import questionnaire as q
 from model import LanguageModel
 
-url = "https://docs.google.com/forms/d/e/1FAIpQLSfqoOW5xa4qBb5jMczGmoyBlkwD4Qg70ti-Yo2xrcXNolvZFQ/viewform"
+url = "https://docs.google.com/forms/d/e/1FAIpQLSfQ_-joZ_Cj2_Igm0hgYaeKleHzNH89ff5ofH0Xoq6UoTzOyQ/viewform"
 
-questionnaire = gFormParser.parse_multipaged_form(url)
+questionnaire = gFormParser.parse_multipage_form(url)
 print(questionnaire)
 
 '''
