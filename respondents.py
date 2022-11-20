@@ -5,6 +5,7 @@ from mimesis.enums import Gender
 import googleFormsInterface as gFormParser
 from answer_fill import MethodicFiller
 
+
 def generate_name(gender):
     ru = Person(locale=Locale.RU)
     if gender == 'female':
