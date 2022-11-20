@@ -53,7 +53,7 @@ def parse_general_questions_form(page) -> q.QuestionnaireGeneralQuestions:
             answer_options = []
         if hasattr(element, 'options'):
             for option in element.options:
-                if (option.value != None):
+                if option.value is not None:
                     answer_options.append(option.value)
             questionnaire.add_answer(answer_options)
         else:

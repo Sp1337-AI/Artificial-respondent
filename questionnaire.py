@@ -4,15 +4,15 @@ class QuestionnaireHolder(object):
 
     def __init__(self):
         self.name = ""
-        self.questionnaries = []
+        self.questionnaires = []
 
 
     def add_methodic(self, questionnaire):
-        self.questionnaries.append(questionnaire)
+        self.questionnaires.append(questionnaire)
 
     def __str__(self):
         s = ""
-        for questionnaire in self.questionnaries:
+        for questionnaire in self.questionnaires:
             s += str(questionnaire)
         return s
 
