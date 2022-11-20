@@ -33,12 +33,12 @@ def parse_form(page) -> q.QuestionnaireBase:
     return questionnaire
 
 
-def fill_multipage_form(url, questionnaireHolder: q.QuestionnaireHolder):
+def fill_multipage_form(url, questionnaire_holder: q.QuestionnaireHolder):
     form = Form()
     form.load(url)
 
     def form_filler(element, page_index, element_index):
-        return questionnaireHolder.questionnaires[page_index].answers[element_index]
+        return questionnaire_holder.questionnaires[page_index].answers[element_index]
 
     form.fill(form_filler)
     form.submit()
