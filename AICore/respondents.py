@@ -2,7 +2,7 @@ import numpy as np
 from mimesis import Person
 from mimesis.locales import Locale
 from mimesis.enums import Gender
-import googleFormsInterface as gFormParser
+from dataInterfaces import googleFormsInterface as gFormParser
 from answer_fill import MethodicFiller
 
 

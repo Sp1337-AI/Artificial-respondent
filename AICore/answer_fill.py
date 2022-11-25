@@ -1,5 +1,4 @@
 import numpy as np
-from model import LanguageModel
 from sklearn.metrics.pairwise import cosine_similarity
 
 

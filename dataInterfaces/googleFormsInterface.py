@@ -1,8 +1,6 @@
-import gforms.elements
 from gforms import Form
-from gforms.elements import Short, Value, Radio, Paragraph, Scale
 
-import questionnaire as q
+from entities import questionnaire as q
 
 
 def parse_multipage_form(url) -> q.QuestionnaireHolder:

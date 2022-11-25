@@ -1,6 +1,4 @@
-import googleFormsInterface as gFormParser
-import questionnaire as q
-from model import LanguageModel
+from dataInterfaces import googleFormsInterface as gFormParser
 
 url = "https://docs.google.com/forms/d/e/1FAIpQLSfQ_-joZ_Cj2_Igm0hgYaeKleHzNH89ff5ofH0Xoq6UoTzOyQ/viewform"
 
