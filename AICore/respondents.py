@@ -90,7 +90,7 @@ class SampleGenerator(object):
         self.list_of_questionnaires = list_of_questionnaires
         self.respondents = []
 
-    def __call__(self, url):
+    def __call__(self):
         for it in range(self.num_of_respondents):
             respondent = RespondentGenerator(self.model, self.general_questionnaire, self.list_of_questionnaires)
             respondent.fill_survey()
