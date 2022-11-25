@@ -18,6 +18,13 @@ def generate_name(gender):
         print('There are only two genders!')
 
 
+def invert_permutation(p):
+    p = np.asanyarray(p)
+    s = np.empty_like(p)
+    s[p] = np.arange(p.size)
+    return s
+
+
 def cut_number_of_question_order(question):
     out_question = "".join(filter(lambda c: c != '.' and c != ';', question))
     while True:
@@ -50,7 +57,42 @@ class RespondentGenerator(object):
             raise ValueError("Wrong education value")
 
     def fill_course(self):
-        pass
+        if self.education == 'Научная степень':
+            return np.random.randint(1, 3)
+        else:
+            raise np.random.randint(1, 5)
+
+    def fill_nation(self):
+        if self.gender == 'Женский':
+            return np.random.choice(['Русская', 'Узбечка', 'Татарка', 'Таджичка', 'Немка', 'Еврейка'],
+                                    p=[0.2, 0.6, 0.15, 0.02, 0.01, 0.02])
+        elif self.gender == 'Мужской':
+            return np.random.choice(['Русский', 'Узбек', 'Татарин', 'Таджик', 'Немец', 'Еврей'],
+                                    p=[0.2, 0.6, 0.15, 0.02, 0.01, 0.02])
+
+    def fill_job_exp(self):
+        if 16 <= self.age <= 18:
+            return np.random.choice([0, 1], p=[0.85, 0.15])
+        elif 18 < self.age <= 30:
+            return np.random.choice([0, 1, 2, 3, 4, 5], p=[0.1, 0.2, 0.3, 0.2, 0.1, 0.1])
+        elif 30 < self.age <= 45:
+            return np.random.choice([np.random.randint(2, 6), np.random.randint(6, 12)], p=[0.4, 0.6])
+        elif 45 < self.age:
+            return np.random.randint(10, 25)
+
+    def fill_faith(self):
+        if self.nation == 'Узбек' or self.nation == 'Узбечка':
+            return np.random.choice(['Ислам', 'Христианство', 'Иудаизм', 'Атеизм'], p=[0.9, 0.06, 0.01, 0.04])
+        elif self.nation == 'Русский' or self.nation == 'Русская':
+            return np.random.choice(['Ислам', 'Христианство', 'Иудаизм', 'Атеизм'], p=[0.1, 0.7, 0.01, 0.19])
+        elif self.nation == 'Татарин' or self.nation == 'Татарка':
+            return np.random.choice(['Ислам', 'Христианство', 'Иудаизм', 'Атеизм'], p=[0.6, 0.2, 0.01, 0.19])
+        elif self.nation == 'Таджик' or self.nation == 'Таджичка':
+            return np.random.choice(['Ислам', 'Христианство', 'Иудаизм', 'Атеизм'], p=[0.95, 0.01, 0.01, 0.03])
+        elif self.nation == 'Немец' or self.nation == 'Немка':
+            return np.random.choice(['Ислам', 'Христианство', 'Иудаизм', 'Атеизм'], p=[0.1, 0.6, 0, 0.3])
+        elif self.nation == 'Еврей' or self.nation == 'Еврейка':
+            return np.random.choice(['Ислам', 'Христианство', 'Иудаизм', 'Атеизм'], p=[0, 0.02, 0.9, 0.08])
 
     def __init__(self, language_model, general_questionnaire, list_of_questionnaires):
         self.model = language_model
@@ -62,18 +104,32 @@ class RespondentGenerator(object):
             ['Cреднее', 'Cреднее специальное', 'Неоконченное высшее, Бакалавр (еще учусь)',
              'Высшее, Бакалавр (уже закончил)', 'Научная степень'],
             p=[0.2, 0.2, 0.4, 0.17, 0.03])
-        self.age = None
-        self.course = None
+        self.age = self.fill_age()
+        self.course = self.fill_course()
+        self.nation = self.fill_nation()
+        self.job_exp = self.fill_job_exp()
+        self.family_composition = np.random.choice(['Полная', 'Неполная'], p=[0.6, 0.4])
+        self.faith = self.fill_faith()
+        self.siblings_num = np.random.choice([0, 1, 2, 3, 4], p=[0.3, 0.4, 0.2, 0.09, 0.01])
+        self.probable_general_questions = ['Пол', 'Возраст', 'Образование', 'Специальность, факультет', 'Курс',
+                                           'Национальность', 'Опыт работы', 'Состав семьи', 'Вероисповедание',
+                                           'Количество братьев и сестер']
 
     def fill_general_questions(self):
-        pass
+        self.general_questionnaire.questions = [cut_number_of_question_order(question) for question in
+                                                self.general_questionnaire.questions]
 
     def fill_methodic(self, questionnaire, threshold=0.6):
         questionnaire.questions = [cut_number_of_question_order(question) for question in questionnaire.questions]
-        # тут надо еще перемешать вопросы и обратно их поставить в порядке
+        perm = np.random.permutation(len(questionnaire.questions))  # чекаем тут есчо
+        inv_perm = invert_permutation(perm)  # чекаем тут есчо
+        questionnaire.questions = list(np.asarray(questionnaire.questions)[perm])  # чекаем тут есчо
+        questionnaire.answers = list(np.asarray(questionnaire.answers)[perm])  # чекаем тут есчо
         filler = MethodicFiller(questionnaire.answer_options, questionnaire.questions, self.model)
         filler.put_answers(threshold=threshold)
         questionnaire.answers = filler.ready_answers
+        questionnaire.questions = list(np.asarray(questionnaire.questions)[inv_perm])  # чекаем тут есчо
+        questionnaire.answers = list(np.asarray(questionnaire.answers)[inv_perm])  # чекаем тут есчо
         return questionnaire
 
     def fill_survey(self):
@@ -95,4 +151,4 @@ class SampleGenerator(object):
             respondent = RespondentGenerator(self.model, self.general_questionnaire, self.list_of_questionnaires)
             respondent.fill_survey()
             self.respondents.append(respondent)
-            #gFormParser.fill_scale_form(url, respondent)  # вот здесь она должна принимать респондента.
+            # gFormParser.fill_scale_form(url, respondent)  # вот здесь она должна принимать респондента.
