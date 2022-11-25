@@ -82,15 +82,17 @@ class RespondentGenerator(object):
             questionnaire = self.fill_methodic(questionnaire)
 
 
-class GeneratorTolpi(object):
-    def __init__(self, language_model, razmer_tolpi, general_questionnaire, list_of_questionnaires):
+class SampleGenerator(object):
+    def __init__(self, language_model, num_of_respondents, general_questionnaire, list_of_questionnaires):
         self.model = language_model
-        self.razmer_tolpi = razmer_tolpi
+        self.num_of_respondents = num_of_respondents
         self.general_questionnaire = general_questionnaire
         self.list_of_questionnaires = list_of_questionnaires
+        self.respondents = []
 
-    def tolpu_v_boy(self, url):
-        for it in range(self.razmer_tolpi):
+    def __call__(self, url):
+        for it in range(self.num_of_respondents):
             respondent = RespondentGenerator(self.model, self.general_questionnaire, self.list_of_questionnaires)
             respondent.fill_survey()
-            gFormParser.fill_scale_form(url, respondent)  # вот здесь она должна принимать респондента.
+            self.respondents.append(respondent)
+            #gFormParser.fill_scale_form(url, respondent)  # вот здесь она должна принимать респондента.
