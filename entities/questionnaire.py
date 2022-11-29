@@ -49,7 +49,9 @@ class QuestionnaireBase(object):
         self.answers = []
 
     def add_main_question(self, question):
-        self.questions.append(question)
+        question_entity = Question()
+        question_entity.question_string = question
+        self.questions.append(question_entity)
 
     def add_supportive_question(self, question):
         self.other_questions.append(question)
@@ -61,4 +63,5 @@ class QuestionnaireBase(object):
         s = ""
         for question in self.questions:
             s += str(question)
+            s += '\n'
         return s
