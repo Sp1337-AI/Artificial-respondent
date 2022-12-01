@@ -1,12 +1,13 @@
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 
+import AICore.model
 
 
 class MethodicFiller(object):
 
-    def __init__(self, list_of_variants, questions, cur_model):
-        self.model = cur_model
+    def __init__(self, list_of_variants, questions):
+        self.model = AICore.model.current_model
         self.list_of_variants = list_of_variants
         self.num_of_variants = len(list_of_variants)
         self.questions = questions
@@ -118,11 +119,9 @@ class MethodicFiller(object):
 
     def put_answers(self, threshold):
         encoded_questions = self.model(self.questions)
-        print('min value for questions', encoded_questions.min())
         similarities = cosine_similarity(encoded_questions.cpu(), encoded_questions.cpu())
         for i in range(self.questions_length):
             #print(f'similarities[{i}] =', len(similarities[i][similarities[i] > threshold]))
-            print('min sim:', similarities[i].min())
             if self.ready_answers[i] is None:
                 self.ready_answers[i] = self.put_first()
                 for j, similarity in enumerate(similarities[i]):

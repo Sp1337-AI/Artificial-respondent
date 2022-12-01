@@ -111,8 +111,8 @@ def calculate_scales(respondents_array):
 
 
 holder = txtFileInterface.load_questions_from_txt("../dataInterfaces/Экзистенциализм.txt")
-print(holder)
-sg = respondents.SampleGenerator2()
-respondents_array = sg.get_sample(10, holder)
-results = calculate_scales(respondents_array)
+#print(holder)
+sg = respondents.SampleGenerator()
+respondent_holders = sg(10, holder, have_general=False)
+results = calculate_scales(respondent_holders)
 print(results)

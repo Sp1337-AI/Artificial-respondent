@@ -6,10 +6,10 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 class LanguageModel(object):
 
     def __init__(self):
-        #tokenizer = AutoTokenizer.from_pretrained("sberbank-ai/sbert_large_mt_nlu_ru")
-        #enc = AutoModel.from_pretrained("sberbank-ai/sbert_large_mt_nlu_ru")
-        tokenizer = AutoTokenizer.from_pretrained("sentence-transformers/paraphrase-multilingual-mpnet-base-v2")
-        enc = AutoModel.from_pretrained("sentence-transformers/paraphrase-multilingual-mpnet-base-v2")
+        tokenizer = AutoTokenizer.from_pretrained("sberbank-ai/sbert_large_mt_nlu_ru")
+        enc = AutoModel.from_pretrained("sberbank-ai/sbert_large_mt_nlu_ru")
+        #tokenizer = AutoTokenizer.from_pretrained("sentence-transformers/paraphrase-multilingual-mpnet-base-v2")
+        #enc = AutoModel.from_pretrained("sentence-transformers/paraphrase-multilingual-mpnet-base-v2")
         self.model = {
             'tokenizer': tokenizer,
             'encoder': enc,
@@ -31,3 +31,11 @@ class LanguageModel(object):
         sentence_embeddings = self.mean_pooling(model_output, encoded_input['attention_mask'])
         return sentence_embeddings
 
+
+def set_model(model_type):
+    if model_type == 'random':
+        return None
+    elif model_type == 'language_model':
+        return LanguageModel()
+
+current_model = set_model('language_model')

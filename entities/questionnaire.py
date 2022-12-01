@@ -1,3 +1,6 @@
+from AICore.respondents import clean_question_string
+
+
 class Question(object):
     """One block containing a question and answer options."""
 
@@ -52,6 +55,12 @@ class QuestionnaireBase(object):
         question_entity = Question()
         question_entity.question_string = question
         self.questions.append(question_entity)
+
+    def get_all_clean_question_strings(self):
+        question_strings = []
+        for question in self.questions:
+            question_strings.append(clean_question_string(question.question_string))
+        return question_strings
 
     def add_supportive_question(self, question):
         self.other_questions.append(question)
